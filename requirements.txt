@@ -42,3 +42,6 @@ matplotlib
 # Sertit libs
 eoreader>=0.22.0
 sertit[full]>=1.46.4
+
+# I/O / Downloads
+requests

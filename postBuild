@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+
+echo "Binder postBuild: Downloading data..."
+python scripts/download_data.py
