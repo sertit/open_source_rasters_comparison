@@ -2,58 +2,66 @@
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/sertit/open_source_rasters_comparison.git/main?urlpath=%2Fdoc%2Ftree%2Fnotebooks%2F01_io_and_attributes.ipynb)
 
-Comparisons on different raster features from different Python libraries based on `xarray`, with or without `dask`.
+## Context & Goal
 
-This repository contains a series of Jupyter notebooks comparing how open-source Python libraries handle several raster-processing tasks.
+This repository presents a benchmark and hands-on comparison of open-source Python libraries for geospatial raster processing.
 
-The following libraries have been considered :
-- `rasterio`
-- `rioxarray`
-- `odc-geo`
-- `geoutils`
-- `xarray-spatial`
-<br><br>
+Its objective is twofold:
+- **Compare** how different Python ecosystems handle common Earth observation and GIS raster operations (I/O, reprojection, masking, merging, vectorization, nodata handling, and Dask-based scaling).
+- **Provide a practical entry point** for developers and geospatial practitioners (from beginners to advanced users) looking to choose the right library for their workflow.
 
+---
 
-# Notebooks Overview
+## Libraries Compared
 
-### 📖 [**01_io_and_attributes.ipynb**](notebooks/01_io_and_attributes.ipynb)
-- opening raster files
-- reading bands and metadata
-- accessing GCPs and RPCs
-- saving with different settings : locally, to COG and to Zarr formats
-<br>
+| Library | Core Data Model | `xarray` Integration | `dask` (Lazy / Chunked) |
+| :--- | :--- | :--- | :--- |
+| **`rasterio`** | NumPy arrays + GDAL dataset handles | Manual | Via `rioxarray` or custom windowing |
+| **`rioxarray`** | `xarray.DataArray` / `Dataset` | Native (`rio` accessor) | Native |
+| **`odc-geo`** | `xarray` + `GeoBox` | Native (`odc` accessor) | Native |
+| **`geoutils`** | Custom `Raster` object (NumPy / MaskedArray) | Experimental / accessor | Partial |
+| **`xarray-spatial`** | `xarray.DataArray` | Native | Native (Numba / Dask) |
 
-### 🪟 [**02_windows_and_decimation.ipynb**](notebooks/02_windows_and_decimation.ipynb)
-- reading a dataset by window
-- decimating a raster
-<br>
+---
 
-### 📽️ [**03_reprojection.ipynb**](notebooks/03_reprojection.ipynb)
-- reprojecting rasters to a new CRS (without RPC)
-- reproject_match a DEM with invalid CRS to a reference raster
-<br>
+## Getting Started
 
-### 🎭 [**04_mask_and_crop.ipynb**](notebooks/04_mask_and_crop.ipynb)
-- creating spatial masks based on geometry
-- cropping rasters to vector polygons or bounding boxes
-<br>
+### 1. Set up the environment
 
-### 🔗 [**05_merge.ipynb**](notebooks/05_merge.ipynb)
-- read multiple raster tiles
-- combine them into a single raster file
-<br>
+You can create the Conda environment (Python 3.13) from [`environment.yml`](environment.yml):
 
-### 🗺️ [**06_rasterization_and_vectorization.ipynb**](notebooks/06_rasterization_and_vectorization.ipynb)
-- rasterizing vector geometries into rasters
-- vectorizing raster regions into geometries
-<br>
+```bash
+conda env create -f environment.yml
+conda activate open_source_rasters_comparison
+```
 
-### 🗄️ [**07_nodata_management.ipynb**](notebooks/07_nodata_management.ipynb)
-- how nodata values are handled between different libraries 
-- pros and cons between NaNs and masked arrays
-- nodata interpolation to fill missing values
-<br>
+Alternatively, install the dependencies in an existing Python environment using [`requirements.txt`](requirements.txt):
 
-### 🎯 [**08_usecase_reproj_dask.ipynb**](notebooks/08_usecase_reproj_dask.ipynb)
-- usecase on reprojecting a raster and performance comparison with or without dask
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Download the sample data
+
+The notebooks rely on sample raster and vector datasets stored in `data/`. Download and extract them automatically by running [`scripts/download_data.py`](scripts/download_data.py) from the repository root:
+
+```bash
+python scripts/download_data.py
+```
+
+This script downloads the archive and extracts it into `data/rasters` and `data/vectors`.
+
+---
+
+## Notebooks Overview
+
+| Notebook | Topic | What you will learn |
+| :--- | :--- | :--- |
+| 📖 [**01_io_and_attributes.ipynb**](notebooks/01_io_and_attributes.ipynb) | **Input / Output & Attributes** | Opening rasters, inspecting bands and metadata, accessing GCPs/RPCs, and saving locally or to COG / Zarr formats. |
+| 🪟 [**02_windows_and_decimation.ipynb**](notebooks/02_windows_and_decimation.ipynb) | **Windows & Decimation** | Reading subsets of large rasters by spatial/pixel windows and downsampling (decimation) for previews or fast processing. |
+| 📽️ [**03_reprojection.ipynb**](notebooks/03_reprojection.ipynb) | **Reprojection** | Reprojecting rasters to a target CRS and aligning (`reproject_match`) a DEM with an invalid CRS to a reference raster. |
+| 🎭 [**04_mask_and_crop.ipynb**](notebooks/04_mask_and_crop.ipynb) | **Mask & Crop** | Creating spatial masks from vector geometries and cropping rasters to polygons or bounding boxes. |
+| 🔗 [**05_merge.ipynb**](notebooks/05_merge.ipynb) | **Merge** | Reading multiple raster tiles and mosaicking them into a single continuous raster. |
+| 🗺️ [**06_rasterization_and_vectorization.ipynb**](notebooks/06_rasterization_and_vectorization.ipynb) | **Rasterization & Vectorization** | Converting vector geometries into raster grids and extracting vector polygons from raster regions. |
+| 🗄️ [**07_nodata_management.ipynb**](notebooks/07_nodata_management.ipynb) | **Nodata Management** | Understanding how each library handles nodata (`NaN` vs masked arrays) and interpolating missing values. |
+| 🎯 [**08_usecase_reproj_dask.ipynb**](notebooks/08_usecase_reproj_dask.ipynb) | **Dask Benchmark Use Case** | Benchmarking raster reprojection performance with and without Dask across different chunk sizes. |

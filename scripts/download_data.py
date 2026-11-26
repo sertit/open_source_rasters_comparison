@@ -5,6 +5,9 @@ from pathlib import Path
 DATA_DIR = Path("data")
 DATA_DIR.mkdir(exist_ok=True)
 
+OUTPUT_DIR = Path("outputs")
+OUTPUT_DIR.mkdir(exist_ok=True)
+
 URL="https://seafile.unistra.fr/f/64a60dc6200744d99aef/?dl=1"
 ZIP_PATH = DATA_DIR / "geodata.zip"
 
